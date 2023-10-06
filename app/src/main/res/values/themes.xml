@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.Budgetwise" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.MySplash"  parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenBackground">#FF5157BF</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.Budgetwise</item>
+    </style>
 </resources>
