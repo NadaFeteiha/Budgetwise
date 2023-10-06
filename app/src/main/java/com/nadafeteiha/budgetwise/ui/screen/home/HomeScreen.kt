@@ -22,6 +22,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +43,7 @@ import com.nadafeteiha.budgetwise.R
 import com.nadafeteiha.budgetwise.ui.screen.home.composable.BudgetCard
 import com.nadafeteiha.budgetwise.ui.composable.FloatingButton
 import com.nadafeteiha.budgetwise.ui.screen.home.composable.AppBar
+import com.nadafeteiha.budgetwise.ui.screen.welcome.WelcomeDialog
 import com.nadafeteiha.budgetwise.ui.theme.Purple80
 import com.nadafeteiha.budgetwise.util.toDoubleOrZero
 
@@ -128,6 +130,10 @@ private fun HomeScreenContent(
                 }
             }
         }
+    }
+
+    if (state.showDialog) {
+        WelcomeDialog(onDismiss = listener::onDialogDismiss)
     }
 }
 

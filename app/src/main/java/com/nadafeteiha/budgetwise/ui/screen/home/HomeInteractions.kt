@@ -9,4 +9,5 @@ interface HomeInteractions {
 
     fun onUpdateBottomSheetVisibility(isVisible: Boolean = false)
 
+    fun onDialogDismiss()
 }

@@ -27,13 +27,24 @@ class HomeViewModel @Inject constructor(private val repository: IRepository) : V
         getCategories()
         calculateTotals()
         setDate()
+        getUserInfo()
+    }
+
+    private fun getUserInfo() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getUserInfo().collectLatest { user ->
+                if (user == null) {
+                    _uiState.update { it.copy(showDialog = true) }
+                } else {
+                    _uiState.update { it.copy(budget = user.budget, showDialog = false) }
+                }
+            }
+
+        }
     }
 
     private fun calculateTotals() {
         viewModelScope.launch(Dispatchers.IO) {
-            val totalBudget = repository.getTotalBudget()
-            _uiState.update { it.copy(budget = totalBudget) }
-
             repository.getTotalSpent().collectLatest { totalSpent ->
                 _uiState.update { it.copy(totalSpent = totalSpent) }
             }
@@ -85,6 +96,10 @@ class HomeViewModel @Inject constructor(private val repository: IRepository) : V
             )
         }
 
+    }
+
+    override fun onDialogDismiss() {
+        _uiState.update { it.copy(showDialog = false) }
     }
 
 

@@ -1,5 +1,6 @@
 package com.nadafeteiha.budgetwise.ui.screen.home
 
+import android.app.AlertDialog
 import com.nadafeteiha.budgetwise.data.entity.Category
 
 
@@ -14,7 +15,9 @@ data class HomeUIState(
 
     val selectedCategoryId: Long? = null,
     val selectedSpendValue: Double = 0.0,
-    val bottomSheetVisible: Boolean = false
+    val bottomSheetVisible: Boolean = false,
+
+    val showDialog: Boolean = false
 )
 
 
