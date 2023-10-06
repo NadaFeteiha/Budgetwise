@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.nadafeteiha.budgetwise.data.entity.Category
+import com.nadafeteiha.budgetwise.data.entity.UserInfo
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -24,4 +25,11 @@ interface BudgetDao {
 
     @Query("SELECT SUM(spent) FROM BUDGET_TABLE")
     fun getTotalSpent(): Flow<Double>
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(userInfo: UserInfo): Long
+
+    @Query("SELECT * FROM INFO_TABLE LIMIT 1")
+    fun getUser(): Flow<UserInfo?>
 }
