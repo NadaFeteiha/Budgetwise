@@ -17,23 +17,28 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = Green,
     tertiary = Base60,
-    background = Color.Black
+    background = Color.DarkGray,
+    surface = Color.Black
+
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Purple80,
     secondary = Green,
     tertiary = Base60,
-    background = Color.White
+    background = blueGrey,
+
+    surface = Color.White
 )
 
 val LocalNavController =
-    compositionLocalOf<NavController> { error("No NavController found!") }
+    compositionLocalOf<NavHostController> { error("No NavController found!") }
 
 
 @Composable
