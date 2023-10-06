@@ -1,17 +1,25 @@
 package com.nadafeteiha.budgetwise.ui.screen.home
 
+import com.nadafeteiha.budgetwise.data.entity.Category
+
 
 data class HomeUIState(
     val isLoading: Boolean = true,
     val error: String = "",
+
+    val date: String = "",
     val categories: List<CategoryUIState> = emptyList(),
     val totalSpent: Double = 0.0,
-    val budget: Double = 0.0
+    val budget: Double = 0.0,
+
+    val selectedCategoryId: Long? = null,
+    val selectedSpendValue: Double = 0.0,
+    val bottomSheetVisible: Boolean = false
 )
 
 
 data class CategoryUIState(
-    val id: Int = 0,
+    val id: Long = 0,
     val icon: Int = 0,
     val title: String = "",
     val balance: Double = 0.0,
@@ -26,6 +34,14 @@ private fun calculateProgress(spent: Double, total: Double): Float {
 }
 
 //regain Mapper
+fun Category.toUiState() = CategoryUIState(
+    id = id,
+    icon = icon,
+    color = color,
+    spent = spent,
+    title = title,
+    balance = total
+)
 
-
+fun List<Category>.toUiState() = map { it.toUiState() }
 //endregain
