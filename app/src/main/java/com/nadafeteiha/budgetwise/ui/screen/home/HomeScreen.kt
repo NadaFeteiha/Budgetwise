@@ -126,6 +126,11 @@ private fun HomeScreenContent(
 
     if (state.showDialog) {
         UserInfoDialog(onDismiss = listener::onDialogDismiss)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f))
+        )
     }
 }
 
