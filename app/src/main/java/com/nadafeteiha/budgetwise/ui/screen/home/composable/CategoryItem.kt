@@ -1,5 +1,9 @@
 package com.nadafeteiha.budgetwise.ui.screen.home.composable
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +18,8 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,8 +41,12 @@ import com.nadafeteiha.budgetwise.ui.theme.Green
 
 @Composable
 fun CategoryItem(
-    modifier: Modifier = Modifier, category: CategoryUIState
+    modifier: Modifier = Modifier,
+    category: CategoryUIState,
+    animationDurationMillis: Int = 3000
 ) {
+    val animatedProgress = remember { Animatable(0f) }
+
     val defaultStyle = SpanStyle(color = Color.Gray, fontWeight = FontWeight.Bold, fontSize = 15.sp)
     val spentText = buildAnnotatedString {
         withStyle(style = defaultStyle) { append("spent ") }
@@ -99,9 +109,16 @@ fun CategoryItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp)),
-            progress = category.progress,
+            progress = animatedProgress.value,
             color = Color(category.color),
             trackColor = MaterialTheme.colorScheme.tertiary
+        )
+    }
+
+    LaunchedEffect(category.progress) {
+        animatedProgress.animateTo(
+            targetValue = category.progress,
+            animationSpec = tween(durationMillis = animationDurationMillis)
         )
     }
 }
