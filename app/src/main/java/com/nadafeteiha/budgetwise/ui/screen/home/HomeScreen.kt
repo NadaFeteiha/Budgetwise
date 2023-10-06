@@ -1,5 +1,6 @@
 package com.nadafeteiha.budgetwise.ui.screen.home
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +25,10 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -43,17 +47,28 @@ import com.nadafeteiha.budgetwise.R
 import com.nadafeteiha.budgetwise.ui.screen.home.composable.BudgetCard
 import com.nadafeteiha.budgetwise.ui.composable.FloatingButton
 import com.nadafeteiha.budgetwise.ui.screen.home.composable.AppBar
+import com.nadafeteiha.budgetwise.ui.screen.home.composable.BottomSheet
 import com.nadafeteiha.budgetwise.ui.screen.userInfo.UserInfoDialog
 import com.nadafeteiha.budgetwise.ui.theme.Purple80
 import com.nadafeteiha.budgetwise.util.toDoubleOrZero
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
     HomeScreenContent(state = state, listener = viewModel)
+
+    val message = stringResource(id = R.string.exceed_valid_amount)
+
+    LaunchedEffect(state.isValidAmountToSpend) {
+        if (!state.isValidAmountToSpend) {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScreenContent(
     state: HomeUIState,
@@ -99,56 +114,13 @@ private fun HomeScreenContent(
         )
 
         if (state.bottomSheetVisible) {
-            ModalBottomSheet(
-                onDismissRequest = { listener.onUpdateBottomSheetVisibility(false) },
-                modifier = Modifier.fillMaxWidth().wrapContentHeight()
-            ) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    if (state.selectedCategoryId == null) {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            text = stringResource(id = R.string.select_save),
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        LazyColumn {
-                            items(state.categories) { category ->
-                                Column(
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Text(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clickable {
-                                                listener.onCategorySelected(
-                                                    category.id
-                                                )
-                                            }
-                                            .padding(16.dp),
-                                        text = category.title
-                                    )
-                                    Divider(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(start = 16.dp, end = 16.dp)
-                                    )
-                                }
-                            }
-                        }
-                    } else {
-                        SpendAmount(
-                            spendValue = state.selectedSpendValue,
-                            onValueChange = listener::onSpentValueChange,
-                            onDoneClicked = listener::onDoneClicked,
-                            onCancelClicked = listener::onUpdateBottomSheetVisibility,
-                            title = state.categories.find { it.id == state.selectedCategoryId }?.title
-                                ?: ""
-                        )
-                    }
-                }
-            }
+            BottomSheet(
+                selectedCategory = state.selectedCategory,
+                selectedSpendValue = state.selectedSpendValue,
+                isValidAmountToSpend = state.isValidAmountToSpend,
+                categories = state.categories,
+                listener = listener
+            )
         }
     }
 
@@ -157,62 +129,5 @@ private fun HomeScreenContent(
     }
 }
 
-@Composable
-private fun SpendAmount(
-    modifier: Modifier = Modifier,
-    title: String,
-    spendValue: Double,
-    onValueChange: (Double) -> Unit,
-    onDoneClicked: () -> Unit,
-    onCancelClicked: () -> Unit,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.primary,
-            maxLines = 1
-        )
 
-        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
-            value = "$spendValue",
-            onValueChange = { onValueChange(it.toDoubleOrZero()) },
-            label = { Text(stringResource(id = R.string.spend_amount)) },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Decimal
-            ),
-            singleLine = true,
-            placeholder = { Text(stringResource(id = R.string.spend_amount)) })
-
-        Row(
-            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = onCancelClicked,
-                shape = RoundedCornerShape(4.dp),
-            ) {
-                Text(
-                    stringResource(id = R.string.cancel), modifier = Modifier.padding(start = 8.dp)
-                )
-            }
-
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = onDoneClicked,
-                enabled = spendValue != 0.0,
-                shape = RoundedCornerShape(4.dp),
-            ) {
-                Text(
-                    stringResource(id = R.string.save), modifier = Modifier.padding(start = 8.dp)
-                )
-            }
-        }
-    }
-}
 
