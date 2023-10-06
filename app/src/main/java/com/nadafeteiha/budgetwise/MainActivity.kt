@@ -8,7 +8,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -36,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import com.nadafeteiha.budgetwise.ui.composable.BottomBar
 import com.nadafeteiha.budgetwise.ui.composable.BottomNavigationScreens
 import com.nadafeteiha.budgetwise.ui.composable.NavigationGraph
+import com.nadafeteiha.budgetwise.ui.composable.ROUTE_CATEGORY
 import com.nadafeteiha.budgetwise.ui.theme.BudgetwiseTheme
 import com.nadafeteiha.budgetwise.ui.theme.LocalNavController
 import com.nadafeteiha.budgetwise.ui.theme.Purple80
@@ -47,28 +50,25 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            BudgetwiseTheme(
-            ) {
+            BudgetwiseTheme {
                 val navController = rememberNavController()
                 CompositionLocalProvider(LocalNavController provides navController) {
                     Scaffold(
-                        bottomBar = { BottomBar() },
-                        floatingActionButton = {
-                            FloatingActionButton(
-                                onClick = {},
-                                shape = CircleShape,
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.background(Color.Transparent),
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Add,
-                                    contentDescription = "Add",
-                                    tint = MaterialTheme.colorScheme.onPrimary
+                        modifier = Modifier.fillMaxSize(),
+                        bottomBar = {
+                            val visibility =
+                                currentRoute(navController) in listOf(
+                                    BottomNavigationScreens.Home.route,
+                                    BottomNavigationScreens.Profile.route,
                                 )
-                            }
-                        },
-                    ) { innerPadding ->
-                        Box(modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding())) {
+                            BottomBar(visibility)
+                        }) { innerPadding ->
+                        Box(
+                            modifier = Modifier
+                                .padding(bottom = innerPadding.calculateBottomPadding())
+                                .statusBarsPadding()
+                                .fillMaxSize()
+                        ) {
                             NavigationGraph(navController = navController)
                         }
                     }
