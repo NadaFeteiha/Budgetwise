@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -105,16 +106,36 @@ private fun HomeScreenContent(
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     if (state.selectedCategoryId == null) {
-                        Text(text = stringResource(id = R.string.select_save))
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            text = stringResource(id = R.string.select_save),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                         LazyColumn {
                             items(state.categories) { category ->
-                                Text(
-                                    modifier = Modifier.clickable {
-                                        listener.onCategorySelected(
-                                            category.id
-                                        )
-                                    }, text = category.title
-                                )
+                                Column(
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable {
+                                                listener.onCategorySelected(
+                                                    category.id
+                                                )
+                                            }
+                                            .padding(16.dp),
+                                        text = category.title
+                                    )
+                                    Divider(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(start = 16.dp, end = 16.dp)
+                                    )
+                                }
                             }
                         }
                     } else {
