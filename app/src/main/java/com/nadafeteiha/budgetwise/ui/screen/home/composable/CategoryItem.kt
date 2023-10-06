@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nadafeteiha.budgetwise.R
 import com.nadafeteiha.budgetwise.ui.screen.home.CategoryUIState
+import com.nadafeteiha.budgetwise.ui.screen.home.getRemainderAmountCanSpend
 import com.nadafeteiha.budgetwise.ui.theme.BudgetwiseTheme
 import com.nadafeteiha.budgetwise.ui.theme.Green
 
@@ -41,7 +41,7 @@ fun CategoryItem(
     val spentText = buildAnnotatedString {
         withStyle(style = defaultStyle) { append("spent ") }
         withStyle(style = defaultStyle.copy(color = Color.Red)) { append("$${category.spent} ") }
-        withStyle(style = defaultStyle) { append("of $${category.balance}") }
+        withStyle(style = defaultStyle) { append("of $${category.budget}") }
     }
 
     Column(modifier = modifier.fillMaxWidth()) {
@@ -61,7 +61,8 @@ fun CategoryItem(
                     .padding(end = 12.dp)
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(Color(category.color)),
+                    .background(Color(category.color))
+                    .padding(8.dp),
                 tint = MaterialTheme.colorScheme.onPrimary
             )
 
@@ -82,7 +83,7 @@ fun CategoryItem(
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "$${category.balance - category.spent}",
+                        text = "$${category.getRemainderAmountCanSpend()}",
                         color = Green,
                         style = MaterialTheme.typography.titleLarge
                     )
@@ -114,7 +115,7 @@ fun CategoryPreview() {
             category = CategoryUIState(
                 icon = R.drawable.home_icon,
                 title = "Food",
-                balance = 100.0,
+                budget = 100.0,
                 spent = 10.0,
                 color = 0xFF00FF00
             )

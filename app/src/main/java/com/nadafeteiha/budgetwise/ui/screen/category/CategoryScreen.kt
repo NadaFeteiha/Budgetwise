@@ -66,7 +66,7 @@ private fun CategoryContent(
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Text
             ),
-            placeholder = { Text("Enter your name") }
+            placeholder = { Text("Enter category name") }
         )
 
         OutlinedTextField(

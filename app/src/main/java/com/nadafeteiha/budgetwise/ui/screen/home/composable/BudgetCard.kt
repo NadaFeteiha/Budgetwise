@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -31,9 +30,6 @@ import com.nadafeteiha.budgetwise.ui.composable.VerticalDivider
 import com.nadafeteiha.budgetwise.ui.screen.home.CategoryUIState
 import com.nadafeteiha.budgetwise.ui.screen.home.HomeUIState
 import com.nadafeteiha.budgetwise.ui.theme.BudgetwiseTheme
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 @Composable
 fun BudgetCard(
@@ -75,7 +71,7 @@ fun BudgetCard(
         MultiColoredProgressBar(
             modifier = Modifier.padding(horizontal = 16.dp),
             progressColors = state.categories.map { Color(it.color) },
-            progressValues = state.categories.map { it.progress },
+            progressValues = state.categories.map { (it.spent/state.budget).toFloat() },
         )
 
         LazyColumn {
@@ -147,19 +143,19 @@ fun BudgetPreview() {
                     CategoryUIState(
                         icon = R.drawable.home_icon,
                         title = "Food",
-                        balance = 100.0,
+                        budget = 100.0,
                         spent = 10.0,
                         color = 0xFF00FF00
                     ), CategoryUIState(
                         icon = R.drawable.home_icon,
                         title = "Food",
-                        balance = 100.0,
+                        budget = 100.0,
                         spent = 30.0,
                         color = 0xFF6970C9
                     ), CategoryUIState(
                         icon = R.drawable.home_icon,
                         title = "Food",
-                        balance = 100.0,
+                        budget = 100.0,
                         spent = 20.0,
                         color = 0xFF53BD71
                     )
