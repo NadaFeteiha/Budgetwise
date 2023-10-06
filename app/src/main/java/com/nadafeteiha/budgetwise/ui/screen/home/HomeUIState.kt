@@ -1,6 +1,5 @@
 package com.nadafeteiha.budgetwise.ui.screen.home
 
-import android.app.AlertDialog
 import com.nadafeteiha.budgetwise.data.entity.Category
 
 
@@ -13,11 +12,12 @@ data class HomeUIState(
     val totalSpent: Double = 0.0,
     val budget: Double = 0.0,
 
-    val selectedCategoryId: Long? = null,
+    val selectedCategory: CategoryUIState? = null,
     val selectedSpendValue: Double = 0.0,
+    val isValidAmountToSpend: Boolean = true,
     val bottomSheetVisible: Boolean = false,
 
-    val showDialog: Boolean = false
+    val showDialog: Boolean = false,
 )
 
 
@@ -25,9 +25,9 @@ data class CategoryUIState(
     val id: Long = 0,
     val icon: Int = 0,
     val title: String = "",
-    val balance: Double = 0.0,
+    val budget: Double = 0.0,
     val spent: Double = 0.0,
-    val progress: Float = calculateProgress(spent, balance),
+    val progress: Float = calculateProgress(spent, budget),
     val color: Long = 0L
 )
 
@@ -36,14 +36,18 @@ private fun calculateProgress(spent: Double, total: Double): Float {
     return (spent / total).toFloat()
 }
 
-//regain Mapper
+fun CategoryUIState.getRemainderAmountCanSpend(): Double {
+    return budget - spent
+}
+
+//regin Mapper
 fun Category.toUiState() = CategoryUIState(
     id = id,
     icon = icon,
     color = color,
     spent = spent,
     title = title,
-    balance = total
+    budget = total
 )
 
 fun List<Category>.toUiState() = map { it.toUiState() }

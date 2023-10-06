@@ -65,23 +65,33 @@ class HomeViewModel @Inject constructor(private val repository: IRepository) : V
         _uiState.update { it.copy(date = dateFormat.format(calendar.time)) }
     }
 
-    override fun onCategorySelected(categoryId: Long) {
-        _uiState.update { it.copy(selectedCategoryId = categoryId) }
+    override fun onCategorySelected(category: CategoryUIState) {
+        if (category.getRemainderAmountCanSpend() <= 0.0) {
+            _uiState.update { it.copy(isValidAmountToSpend = false) }
+        } else {
+            _uiState.update { it.copy(selectedCategory = category, isValidAmountToSpend = true) }
+        }
+
     }
 
     override fun onSpentValueChange(spent: Double) {
-        _uiState.update { it.copy(selectedSpendValue = spent) }
+        _uiState.update {
+            it.copy(
+                selectedSpendValue = spent,
+                isValidAmountToSpend = spent <= (uiState.value.selectedCategory?.getRemainderAmountCanSpend()
+                    ?: 0.0)
+            )
+        }
     }
 
     override fun onDoneClicked() {
         viewModelScope.launch {
             repository.updateSpendCategoryValue(
-                _uiState.value.selectedCategoryId!!,
-                _uiState.value.selectedSpendValue
+                _uiState.value.selectedCategory!!.id, _uiState.value.selectedSpendValue
             )
             _uiState.update {
                 it.copy(
-                    selectedSpendValue = 0.0, selectedCategoryId = null, bottomSheetVisible = false
+                    selectedSpendValue = 0.0, selectedCategory = null, bottomSheetVisible = false
                 )
             }
         }
@@ -90,9 +100,7 @@ class HomeViewModel @Inject constructor(private val repository: IRepository) : V
     override fun onUpdateBottomSheetVisibility(isVisible: Boolean) {
         _uiState.update {
             it.copy(
-                selectedSpendValue = 0.0,
-                selectedCategoryId = null,
-                bottomSheetVisible = isVisible
+                selectedSpendValue = 0.0, selectedCategory = null, bottomSheetVisible = isVisible
             )
         }
 
