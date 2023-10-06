@@ -77,12 +77,14 @@ private fun CategoryContent(
             onValueChange = {
                 listener.onBudgetChanged(it.toDoubleOrZero())
             },
+            isError = !category.isValidBudget(),
             label = { Text("Total") },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Decimal
             ),
-            placeholder = { Text("Total") }
+            placeholder = { Text("Total") },
         )
+
 
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -118,7 +120,10 @@ private fun CategoryContent(
                 imageVector = Icons.Default.Add,
                 contentDescription = stringResource(id = R.string.save)
             )
-            Text(stringResource(id = R.string.save), modifier = Modifier.padding(start = 8.dp))
+            Text(
+                text = stringResource(id = R.string.save),
+                modifier = Modifier.padding(start = 8.dp)
+            )
         }
 
     }

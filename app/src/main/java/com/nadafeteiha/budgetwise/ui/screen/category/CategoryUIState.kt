@@ -7,6 +7,9 @@ data class CategoryUIState(
     val name: String = "",
     val total: Double? = 0.0,
 
+    val userBudget: Double = 0.0,
+    val totalCategoryBudget: Double = 0.0,
+
     val colors: List<Long> = getColors(),
     val selectedColor: Long? = null,
 
@@ -17,8 +20,17 @@ data class CategoryUIState(
 )
 
 
+fun CategoryUIState.isValidBudget(): Boolean {
+    return if (total != null) {
+        (userBudget - totalCategoryBudget) >= total
+    } else {
+        false
+    }
+}
+
 fun CategoryUIState.isAllDataSet(): Boolean {
-    return name.isNotEmpty() && total != null && total > 0.0 && selectedColor != null && selectedIcon != null
+    return name.isNotEmpty() && total != null && total > 0.0 && selectedColor != null
+            && selectedIcon != null && isValidBudget()
 }
 
 private fun getColors(): List<Long> {

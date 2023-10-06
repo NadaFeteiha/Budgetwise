@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,6 +18,21 @@ class CategoryViewModel @Inject constructor(private val repository: IRepository)
 
     private val _uiState = MutableStateFlow(CategoryUIState())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        getData()
+    }
+
+    private fun getData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _uiState.update { it.copy(userBudget = repository.getUserBudget()) }
+
+            repository.getTotalCategoriesBudget().collectLatest { total ->
+                _uiState.update { it.copy(totalCategoryBudget = total) }
+            }
+        }
+    }
+
     override fun onColorSelected(color: Long) {
         _uiState.update { it.copy(selectedColor = color) }
     }

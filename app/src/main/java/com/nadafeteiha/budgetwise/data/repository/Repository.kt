@@ -10,10 +10,13 @@ interface IRepository {
     suspend fun addCategory(category: Category)
     suspend fun updateSpendCategoryValue(categoryId: Long, spent: Double)
     suspend fun getTotalSpent(): Flow<Double>
+    suspend fun getTotalCategoriesBudget(): Flow<Double>
     suspend fun getAllCategories(): Flow<List<Category>>
 
     suspend fun addUserInfo(userInfo: UserInfo)
     suspend fun getUserInfo(): Flow<UserInfo?>
+    suspend fun getUserBudget(): Double
+
 }
 
 class Repository @Inject constructor(private val budgetDao: BudgetDao) : IRepository {
@@ -29,6 +32,10 @@ class Repository @Inject constructor(private val budgetDao: BudgetDao) : IReposi
         return budgetDao.getTotalSpent()
     }
 
+    override suspend fun getTotalCategoriesBudget(): Flow<Double> {
+        return budgetDao.getTotalCategoriesBudget()
+    }
+
     override suspend fun getAllCategories(): Flow<List<Category>> {
         return budgetDao.getCategories()
     }
@@ -39,6 +46,10 @@ class Repository @Inject constructor(private val budgetDao: BudgetDao) : IReposi
 
     override suspend fun getUserInfo(): Flow<UserInfo?> {
         return budgetDao.getUser()
+    }
+
+    override suspend fun getUserBudget(): Double {
+        return budgetDao.getUserBudget()
     }
 
 

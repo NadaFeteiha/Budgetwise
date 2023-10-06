@@ -1,4 +1,4 @@
-package com.nadafeteiha.budgetwise.ui.screen.welcome
+package com.nadafeteiha.budgetwise.ui.screen.userInfo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

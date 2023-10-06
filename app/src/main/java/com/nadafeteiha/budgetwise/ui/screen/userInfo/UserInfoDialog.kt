@@ -1,10 +1,16 @@
-package com.nadafeteiha.budgetwise.ui.screen.welcome
+package com.nadafeteiha.budgetwise.ui.screen.userInfo
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -12,15 +18,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nadafeteiha.budgetwise.R
 import com.nadafeteiha.budgetwise.util.toDoubleOrZero
+import com.nadafeteiha.budgetwise.util.toStringOrEmpty
 
 
 @Composable
-fun WelcomeDialog(
+fun UserInfoDialog(
     viewModel: UserInfoViewModel = hiltViewModel(),
     onDismiss: () -> Unit
 ) {
@@ -46,34 +54,56 @@ private fun WelcomeDialogContent(
     onDismiss: () -> Unit
 ) {
     AlertDialog(
+        containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(8.dp),
+        tonalElevation = 8.dp,
         onDismissRequest = { onDismiss() },
-        title = { Text(text = "Enter Name and Age") },
+        title = {
+            Text(
+                text = "Enter your Info:",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+        },
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                TextField(
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
                     value = name,
                     onValueChange = { onNameChange(it) },
                     label = { Text("Name") },
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth()
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text
+                    ),
+                    placeholder = { Text("Name") },
+                    singleLine = true
                 )
-                TextField(
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
                     value = "$budget",
                     onValueChange = { onBudgetChange(it.toDoubleOrZero()) },
                     label = { Text(stringResource(id = R.string.budget)) },
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth()
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Decimal
+                    ),
+                    placeholder = { Text(stringResource(id = R.string.budget)) },
+                    singleLine = true
                 )
             }
         },
         confirmButton = {
             Button(
-                onClick = { onDismiss() }
+                onClick = { onDismiss() },
+                shape = RoundedCornerShape(8.dp),
             ) {
                 Text(stringResource(id = R.string.save))
             }

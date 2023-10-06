@@ -26,10 +26,15 @@ interface BudgetDao {
     @Query("SELECT SUM(spent) FROM BUDGET_TABLE")
     fun getTotalSpent(): Flow<Double>
 
+    @Query("SELECT SUM(total) FROM BUDGET_TABLE")
+    fun getTotalCategoriesBudget(): Flow<Double>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(userInfo: UserInfo): Long
 
     @Query("SELECT * FROM INFO_TABLE LIMIT 1")
     fun getUser(): Flow<UserInfo?>
+
+    @Query("SELECT budget FROM INFO_TABLE LIMIT 1")
+    suspend fun getUserBudget(): Double
 }

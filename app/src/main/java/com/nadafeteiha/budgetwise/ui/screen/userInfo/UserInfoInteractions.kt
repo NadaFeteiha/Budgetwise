@@ -1,4 +1,4 @@
-package com.nadafeteiha.budgetwise.ui.screen.welcome
+package com.nadafeteiha.budgetwise.ui.screen.userInfo
 
 interface UserInfoInteractions {
 
