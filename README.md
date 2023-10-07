@@ -4,6 +4,9 @@
 
 ## Video
 [![app](https://i.ytimg.com/vi/U2avuWDlAxU/hqdefault.jpg)](https://www.youtube.com/watch?v=U2avuWDlAxU?autoplay=1) 
+
+## App Structure
+<img width="390" alt="Screenshot 2023-10-06 at 7 03 06 PM" src="https://github.com/NadaFeteiha/Budgetwise/assets/34461597/e63b15c8-03df-4b2d-9165-f72178dc3ff4">
     
 ## Built with
 - [Jetpack Compose](https://developer.android.com/jetpack/compose?gclid=CjwKCAiAzKqdBhAnEiwAePEjktk3ROIIxTqejhHWkDEwSaQqoE6GgrNHM8iYKw8xHx5SPPDu0oJ_DxoC8LYQAvD_BwE&gclsrc=aw.ds) for UI design. 
